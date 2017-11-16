@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Rag Calc</title>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <b>Status da arma</b>
+    <br />
+    <label><input type="radio" name="wtype" value="str" checked />STR</label><br />
+    <label><input type="radio" name="wtype" value="dex" />DEX</label><br />
+    <br />
+
+    <b>StatusATK: </b><br />
+    <labe for="blvl">Level Base:</labe>
+    <input id="blvl" /><br />
+    <labe for="str">STR:</labe>
+    <input id="str" /><br />
+    <labe for="dex">DEX:</labe>
+    <input id="dex" /><br />
+    <labe for="luk">LUK:</labe>
+    <input id="luk" /><br />
+
+    <br />
+
+    <b>WeaponATK: </b><br />
+    <labe for="wlvl">Lvl da Arma:</labe>
+    <input id="wlvl" /><br />
+    <labe for="batk">Ataque Base:</labe>
+    <input id="batk" /><br />
+    <labe for="ref">Bônus Refinamento:</labe>
+    <input id="ref" /><br />
+    <labe for="bonus">Outros Bônus:</labe>
+    <input id="bonus" />%<br />
+    <labe for="penalty">Penalidades:</labe>
+    <input id="penalty" />%<br />
+
+    <br />
+    <labe for="extra"><b>ExtraATK:</b></labe>
+    <input id="extra" /><br />
+
+    <br />
+    <labe for="mastery"><b>MasteryATK:</b></labe>
+    <input id="mastery" /><br />
+
+    <br />
+    <labe for="buff"><b>BuffATK:</b></labe>
+    <input id="buff" /><br />
+
+    <br />
+    <labe for="aspd"><b>ASPD:</b></labe>
+    <input id="aspd" /><br />
+
+    <br />
+    <button onclick="calculate()">Calcular</button>
+
+    <br />
+    <br />
+    <b>StatusATK: </b>
+    <span id="satk"></span>
+    <br />
+    <b>WeaponATK: </b>
+    <span id="watak"></span>
+    <br />
+    <b>Dano Final: </b>
+    <span id="result"></span>
+    <br />
+    <b>DPS: </b>
+    <span id="dps"></span>
+  </body>
+</html>

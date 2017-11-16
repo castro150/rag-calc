@@ -1,70 +1,134 @@
 <html>
   <head>
     <title>Rag Calc</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="dependencies/tether.min.js"></script>
+    <link rel="stylesheet" href="dependencies/tether.min.css"/>
+    <script src="dependencies/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="dependencies/bootstrap.min.css"/>
+    <link rel="stylesheet" href="style/style.css"/>
     <script src="app.js"></script>
   </head>
   <body>
-    <b>Status da arma</b>
-    <br />
-    <label><input type="radio" name="wtype" value="str" checked />STR</label><br />
-    <label><input type="radio" name="wtype" value="dex" />DEX</label><br />
-    <br />
+    <div class="container">
+      <header class="header clearfix">
+        <h3 class="text-muted">Rag Calc</h3>
+      </header>
 
-    <b>StatusATK: </b><br />
-    <labe for="blvl">Level Base:</labe>
-    <input id="blvl" /><br />
-    <labe for="str">STR:</labe>
-    <input id="str" /><br />
-    <labe for="dex">DEX:</labe>
-    <input id="dex" /><br />
-    <labe for="luk">LUK:</labe>
-    <input id="luk" /><br />
+      <div class="row">
+        <div class="col-md-4">
+          <div class="row section-title">
+            <b>Status da arma</b>
+          </div>
+          <div class="row p-l-15">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="wtype" value="str" checked />
+              STR
+            </label>
+          </div>
+          <div class="row p-l-15">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="wtype" value="dex" />
+              DEX
+            </label>
+          </div>
+        </div>
 
-    <br />
+        <div class="col-md-4">
+          <div class="row section-title">
+            <b>StatusATK: </b>
+          </div>
+          <div class="row input-number">
+            <label for="blvl">Level Base:</label>
+            <input id="blvl" type="number" class="form-control" placeholder="Level Base" />
+          </div>
+          <div class="row input-number">
+            <label for="str">STR:</label>
+            <input id="str" type="number" class="form-control" placeholder="STR" />
+          </div>
+          <div class="row input-number">
+            <label for="dex">DEX:</label>
+            <input id="dex" type="number" class="form-control" placeholder="DEX" />
+          </div>
+          <div class="row input-number">
+            <label for="luk">LUK:</label>
+            <input id="luk" type="number" class="form-control" placeholder="LUK" />
+          </div>
+        </div>
 
-    <b>WeaponATK: </b><br />
-    <labe for="wlvl">Lvl da Arma:</labe>
-    <input id="wlvl" /><br />
-    <labe for="batk">Ataque Base:</labe>
-    <input id="batk" /><br />
-    <labe for="ref">Bônus Refinamento:</labe>
-    <input id="ref" /><br />
-    <labe for="bonus">Outros Bônus:</labe>
-    <input id="bonus" />%<br />
-    <labe for="penalty">Penalidades:</labe>
-    <input id="penalty" />%<br />
+        <div class="col-md-4">
+          <div class="row section-title">
+            <b>WeaponATK: </b>
+          </div>
+          <div class="row input-number">
+            <label for="wlvl">Lvl da Arma:</label>
+            <input id="wlvl" type="number" class="form-control" placeholder="Lvl da Arma" />
+          </div>
+          <div class="row input-number">
+            <label for="batk">Ataque Base:</label>
+            <input id="batk" type="number" class="form-control" placeholder="Ataque Base" />
+          </div>
+          <div class="row input-number">
+            <label for="ref">Bônus Refinamento:</label>
+            <input id="ref" type="number" class="form-control" placeholder="Bônus Refinamento" />
+          </div>
+          <div class="row input-number">
+            <div class="col-md-6 no-p p-r-5">
+              <label for="bonus">Outros Bônus (%):</label>
+              <input id="bonus" type="number" class="form-control" placeholder="Outros Bônus (%)" />
+            </div>
+            <div class="col-md-6 no-p p-l-5">
+              <label for="penalty">Penalidades (%):</label>
+              <input id="penalty" type="number" class="form-control" placeholder="Penalidades (%)" />
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <br />
-    <labe for="extra"><b>ExtraATK:</b></labe>
-    <input id="extra" /><br />
+      <div class="row section-divider">
+        <div class="col-md-3">
+          <label for="extra"><b>ExtraATK:</b></label>
+          <input id="extra" type="number" class="form-control" placeholder="ExtraATK" />
+        </div>
+        <div class="col-md-3">
+          <label for="mastery"><b>MasteryATK:</b></label>
+          <input id="mastery" type="number" class="form-control" placeholder="MasteryATK" />
+        </div>
+        <div class="col-md-3">
+          <label for="buff"><b>BuffATK:</b></label>
+          <input id="buff" type="number" class="form-control" placeholder="BuffATK" />
+        </div>
+        <div class="col-md-3">
+          <label for="aspd"><b>ASPD:</b></label>
+          <input id="aspd" type="number" class="form-control" placeholder="ASPD" />
+        </div>
+      </div>
 
-    <br />
-    <labe for="mastery"><b>MasteryATK:</b></labe>
-    <input id="mastery" /><br />
+      <button type="button" class="btn btn-primary pointer-on" onclick="calculate()">
+        Calcular
+      </button>
 
-    <br />
-    <labe for="buff"><b>BuffATK:</b></labe>
-    <input id="buff" /><br />
-
-    <br />
-    <labe for="aspd"><b>ASPD:</b></labe>
-    <input id="aspd" /><br />
-
-    <br />
-    <button onclick="calculate()">Calcular</button>
-
-    <br />
-    <br />
-    <b>StatusATK: </b>
-    <span id="satk"></span>
-    <br />
-    <b>WeaponATK: </b>
-    <span id="watak"></span>
-    <br />
-    <b>Dano Final: </b>
-    <span id="result"></span>
-    <br />
-    <b>DPS: </b>
-    <span id="dps"></span>
+      <div class="jumbotron result-section">
+        <div class="row p-l-15">
+          <h3>Resultado:</h3>
+        </div>
+        <div class="row p-l-15">
+          <b>StatusATK: </b>
+          <span id="satk"></span>
+        </div>
+        <div class="row p-l-15">
+          <b>WeaponATK: </b>
+          <span id="watak"></span>
+        </div>
+        <div class="row p-l-15">
+          <b>Dano Final: </b>
+          <span id="result"></span>
+        </div>
+        <div class="row p-l-15">
+          <b>DPS: </b>
+          <span id="dps"></span>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

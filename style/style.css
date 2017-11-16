@@ -1,0 +1,48 @@
+.header {
+  margin-bottom: 30px;
+}
+
+.container {
+  padding-top: 45px;
+}
+
+.section-divider {
+  padding-top: 20px;
+  padding-bottom: 20px
+}
+
+.section-title {
+  padding: 5px;
+}
+
+.result-section {
+  margin-top: 20px;
+}
+
+.input-number {
+  padding: 10px;
+}
+
+.pointer-on {
+  cursor: pointer;
+}
+
+.no-p {
+  padding: 0px;
+}
+
+.p-r-5 {
+  padding-right: 5px;
+}
+
+.p-l-5 {
+  padding-left: 5px;
+}
+
+.p-r-15 {
+  padding-right: 15px;
+}
+
+.p-l-15 {
+  padding-left: 15px;
+}

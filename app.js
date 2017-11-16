@@ -48,8 +48,8 @@ let calculate = function() {
   let statusAtk = calculateStatusAtk();
   let weaponAtk = calculateWeaponAtk();
 
-  let resultMinus = statusAtk + weaponAtk.weaponAtkMinus + extraAtk + masteryAtk + buffAtk;
-  let resultPlus = statusAtk + weaponAtk.weaponAtkPlus + extraAtk + masteryAtk + buffAtk;
+  let resultMinus = (statusAtk * 2) + weaponAtk.weaponAtkMinus + extraAtk + masteryAtk + buffAtk;
+  let resultPlus = (statusAtk * 2) + weaponAtk.weaponAtkPlus + extraAtk + masteryAtk + buffAtk;
 
   let dps = calculateAtkSec(aspd) * (resultMinus + resultPlus) / 2;
 

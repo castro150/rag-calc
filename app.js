@@ -1,8 +1,16 @@
+// TODO
+// colocar bonus elemental, endow (multiplica o atk básico, bônus de STR ou DEX e bônus de refino)
+// colocar ranged% (dano final) e crit% (multiplicador natural de crítico)
+// colocar crítico
+// colocar defesa
+
 'use strict'
 
 let baseLevel, str, dex, luk, weaponLevel, baseWeaponDamage, refinament;
 let bonus, penalty, extraAtk, masteryAtk, buffAtk, aspd;
 let mainStat, otherStat;
+
+let REFINAMENT_TABLE = [];
 
 let readInput = function(id, def = '1') {
   return document.getElementById(id).value || def;
@@ -64,8 +72,10 @@ let calculateWeaponAtk = function() {
   let variance = 0.05 * weaponLevel * baseWeaponDamage;
   let statBonus = baseWeaponDamage * mainStat / 200;
 
-  let weaponAtkMinus = Math.floor((baseWeaponDamage - variance + statBonus + refinament) * (bonus + 1) * penalty);
-  let weaponAtkPlus = Math.floor((baseWeaponDamage + variance + statBonus + refinament) * (bonus + 1) * penalty);
+  let refMinus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][0];
+  let refPlus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][1];
+  let weaponAtkMinus = Math.floor((baseWeaponDamage - variance + statBonus + refMinus) * (bonus + 1) * penalty);
+  let weaponAtkPlus = Math.floor((baseWeaponDamage + variance + statBonus + refPlus) * (bonus + 1) * penalty);
   return {
     weaponAtkMinus,
     weaponAtkPlus
@@ -86,3 +96,55 @@ let writeResult = function(statusAtk, weaponAtk, resultMinus, resultPlus, dps) {
   writeValue('result', resultMinus + ' - ' + resultPlus);
   writeValue('dps', dps);
 };
+
+let createRefinamentTable = function() {
+  REFINAMENT_TABLE[0] = [];
+  for (let i = 0; i < 20; i++) {
+    refinament = [(i + 1) * 2, (i + 1) * 2];
+    if (i > 6) {
+      refinament[1] = refinament[1] + (i - 6) * 2;
+    }
+    if (i > 14) {
+      refinament[0] = refinament[0] + (i - 14) * 12;
+      refinament[1] = refinament[1] + (i - 14) * 12;
+    }
+    REFINAMENT_TABLE[0].push(refinament);
+  }
+  REFINAMENT_TABLE[1] = [];
+  for (let i = 0; i < 20; i++) {
+    refinament = [(i + 1) * 3, (i + 1) * 3];
+    if (i > 5) {
+      refinament[1] = refinament[1] + (i - 5) * 5;
+    }
+    if (i > 14) {
+      refinament[0] = refinament[0] + (i - 14) * 24;
+      refinament[1] = refinament[1] + (i - 14) * 24;
+    }
+    REFINAMENT_TABLE[1].push(refinament);
+  }
+  REFINAMENT_TABLE[2] = [];
+  for (let i = 0; i < 20; i++) {
+    refinament = [(i + 1) * 5, (i + 1) * 5];
+    if (i > 4) {
+      refinament[1] = refinament[1] + (i - 4) * 8;
+    }
+    if (i > 14) {
+      refinament[0] = refinament[0] + (i - 14) * 36;
+      refinament[1] = refinament[1] + (i - 14) * 36;
+    }
+    REFINAMENT_TABLE[2].push(refinament);
+  }
+  REFINAMENT_TABLE[3] = [];
+  for (let i = 0; i < 20; i++) {
+    refinament = [(i + 1) * 7, (i + 1) * 7];
+    if (i > 3) {
+      refinament[1] = refinament[1] + (i - 3) * 14;
+    }
+    if (i > 14) {
+      refinament[0] = refinament[0] + (i - 14) * 48;
+      refinament[1] = refinament[1] + (i - 14) * 48;
+    }
+    REFINAMENT_TABLE[3].push(refinament);
+  }
+};
+createRefinamentTable();

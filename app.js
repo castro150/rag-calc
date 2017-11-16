@@ -2,6 +2,7 @@
 
 let baseLevel, str, dex, luk, weaponLevel, baseWeaponDamage, refinament;
 let bonus, penalty, extraAtk, masteryAtk, buffAtk, aspd;
+let mainStat, otherStat;
 
 let readInput = function(id, def = '1') {
   return document.getElementById(id).value || def;
@@ -32,20 +33,20 @@ let readValues = function() {
   buffAtk = parseFloat(readInput('buff', '0'));
 
   aspd = parseFloat(readInput('aspd'));
+
+  mainStat = str;
+  otherStat = dex;
+  if (readRadioInput('wtype') === 'dex') {
+    mainStat = dex;
+    otherStat = str;
+  }
 };
 
 let calculate = function() {
   readValues();
 
-  let mainStat = str;
-  let otherStat = dex;
-  if (readRadioInput('wtype') === 'dex') {
-    mainStat = dex;
-    otherStat = str;
-  }
-
-  let statusAtk = calculateStatusAtk(mainStat, otherStat);
-  let weaponAtk = calculateWeaponAtk(mainStat);
+  let statusAtk = calculateStatusAtk();
+  let weaponAtk = calculateWeaponAtk();
 
   let resultMinus = statusAtk + weaponAtk.weaponAtkMinus + extraAtk + masteryAtk + buffAtk;
   let resultPlus = statusAtk + weaponAtk.weaponAtkPlus + extraAtk + masteryAtk + buffAtk;
@@ -55,11 +56,11 @@ let calculate = function() {
   writeResult(statusAtk, weaponAtk, resultMinus, resultPlus, dps);
 };
 
-let calculateStatusAtk = function(mainStat, otherStat) {
+let calculateStatusAtk = function() {
   return Math.floor((baseLevel / 4) + mainStat + (otherStat / 5) + (luk / 3));
 };
 
-let calculateWeaponAtk = function(mainStat) {
+let calculateWeaponAtk = function() {
   let variance = 0.05 * weaponLevel * baseWeaponDamage;
   let statBonus = baseWeaponDamage * mainStat / 200;
 

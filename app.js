@@ -3,11 +3,13 @@
 // colocar ranged% (dano final) e crit% (multiplicador natural de crítico)
 // colocar crítico
 // colocar defesa
+// colocar efeito do EDP
+// https://forums.warpportal.com/index.php?/topic/186118-r-damage-calculation-mechanics-wip/
 
 'use strict'
 
 let baseLevel, str, dex, luk, weaponLevel, baseWeaponDamage, refinament;
-let bonus, penalty, extraAtk, masteryAtk, buffAtk, aspd;
+let bonus, penalty, em, equipAtk, masteryAtk, buffAtk, ammunAtk, aspd;
 let mainStat, otherStat;
 
 let REFINAMENT_TABLE = [];
@@ -35,10 +37,12 @@ let readValues = function() {
   refinament = parseFloat(readInput('ref'));
   bonus = parseFloat(readInput('bonus', '0')) / 100;
   penalty = parseFloat(readInput('penalty', '100')) / 100;
+  em = (parseFloat(readInput('em', '0')) / 100) + 1;
 
-  extraAtk = parseFloat(readInput('extra', '0'));
+  equipAtk = parseFloat(readInput('equip', '0'));
   masteryAtk = parseFloat(readInput('mastery', '0'));
   buffAtk = parseFloat(readInput('buff', '0'));
+  ammunAtk = parseFloat(readInput('ammun', '0'));
 
   aspd = parseFloat(readInput('aspd'));
 
@@ -56,8 +60,8 @@ let calculate = function() {
   let statusAtk = calculateStatusAtk();
   let weaponAtk = calculateWeaponAtk();
 
-  let resultMinus = (statusAtk * 2) + weaponAtk.weaponAtkMinus + extraAtk + masteryAtk + buffAtk;
-  let resultPlus = (statusAtk * 2) + weaponAtk.weaponAtkPlus + extraAtk + masteryAtk + buffAtk;
+  let resultMinus = (statusAtk * 2) + weaponAtk.weaponAtkMinus + equipAtk + masteryAtk + buffAtk + ammunAtk;
+  let resultPlus = (statusAtk * 2) + weaponAtk.weaponAtkPlus + equipAtk + masteryAtk + buffAtk + ammunAtk;
 
   let dps = calculateAtkSec(aspd) * (resultMinus + resultPlus) / 2;
 
@@ -72,8 +76,12 @@ let calculateWeaponAtk = function() {
   let variance = 0.05 * weaponLevel * baseWeaponDamage;
   let statBonus = baseWeaponDamage * mainStat / 200;
 
-  let refMinus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][0];
-  let refPlus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][1];
+  let refMinus = 0;
+  let refPlus = 0;
+  if (refinament > 0) {
+    refMinus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][0];
+    refPlus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][1];
+  }
   let weaponAtkMinus = Math.floor((baseWeaponDamage - variance + statBonus + refMinus) * (bonus + 1) * penalty);
   let weaponAtkPlus = Math.floor((baseWeaponDamage + variance + statBonus + refPlus) * (bonus + 1) * penalty);
   return {

@@ -1,7 +1,5 @@
 // TODO
-// colocar bonus elemental, endow (multiplica o atk básico, bônus de STR ou DEX e bônus de refino)
-// colocar ranged% (dano final) e crit% (multiplicador natural de crítico)
-// colocar crítico
+// colocar ranged% (dano final)
 // colocar defesa
 // colocar efeito do EDP
 // https://forums.warpportal.com/index.php?/topic/186118-r-damage-calculation-mechanics-wip/
@@ -9,7 +7,7 @@
 'use strict'
 
 let baseLevel, str, dex, luk, weaponLevel, baseWeaponDamage, refinament;
-let bonus, penalty, em, equipAtk, masteryAtk, buffAtk, ammunAtk, aspd;
+let bonus, penalty, em, equipAtk, masteryAtk, buffAtk, ammunAtk, aspd, critChance, bcrit;
 let mainStat, otherStat;
 
 let REFINAMENT_TABLE = [];
@@ -45,6 +43,8 @@ let readValues = function() {
   ammunAtk = parseFloat(readInput('ammun', '0'));
 
   aspd = parseFloat(readInput('aspd'));
+  critChance = parseFloat(readInput('crit', '0')) / 100;
+  bcrit = (parseFloat(readInput('bcrit', '0')) / 100) + 1;
 
   mainStat = str;
   otherStat = dex;
@@ -61,12 +61,18 @@ let calculate = function() {
   let weaponAtk = calculateWeaponAtk();
   let finalEquipAtk = equipAtk * em * (bonus + 1) * penalty;
 
-  let resultMinus = (statusAtk * 2) + weaponAtk.weaponAtkMinus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
-  let resultPlus = (statusAtk * 2) + weaponAtk.weaponAtkPlus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
+  let result = {};
+  result.minus = (statusAtk * 2) + weaponAtk.weaponAtkMinus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
+  result.plus = (statusAtk * 2) + weaponAtk.weaponAtkPlus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
 
-  let dps = calculateAtkSec(aspd) * (resultMinus + resultPlus) / 2;
+  let critResult = {};
+  let critDmg = 1.4 * bcrit;
+  critResult.minus = Math.floor(result.minus * critDmg);
+  critResult.plus = Math.floor(result.plus * critDmg);
 
-  writeResult(statusAtk, weaponAtk, resultMinus, resultPlus, dps);
+  let dps = calculateDps(result, critResult);
+
+  writeResult(statusAtk, weaponAtk, result, critResult, dps);
 };
 
 let calculateStatusAtk = function() {
@@ -91,6 +97,12 @@ let calculateWeaponAtk = function() {
   };
 };
 
+let calculateDps = function(atk, critAtk) {
+  let withoutCrit = calculateAtkSec(aspd) * (atk.minus + atk.plus) / 2;
+  let withCrit = calculateAtkSec(aspd) * (critAtk.minus + critAtk.plus) / 2
+  return withoutCrit * (1 - critChance) + withCrit * critChance;
+};
+
 let calculateAtkSec = function(aspd) {
   return 50 / (200 - aspd);
 };
@@ -99,10 +111,11 @@ let writeValue = function(id, value) {
   document.getElementById(id).innerHTML = value;
 };
 
-let writeResult = function(statusAtk, weaponAtk, resultMinus, resultPlus, dps) {
+let writeResult = function(statusAtk, weaponAtk, result, critResult, dps) {
   writeValue('satk', statusAtk);
   writeValue('watak', weaponAtk.weaponAtkMinus + ' - ' + weaponAtk.weaponAtkPlus);
-  writeValue('result', resultMinus + ' - ' + resultPlus);
+  writeValue('result', result.minus + ' - ' + result.plus);
+  writeValue('cresult', critResult.minus + ' - ' + critResult.plus);
   writeValue('dps', dps);
 };
 

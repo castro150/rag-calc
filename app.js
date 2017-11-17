@@ -1,6 +1,5 @@
 // TODO
-// colocar skill
-// https://forums.warpportal.com/index.php?/topic/186118-r-damage-calculation-mechanics-wip/
+// colocar efeito do EDP
 
 'use strict'
 

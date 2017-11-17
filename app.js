@@ -34,7 +34,7 @@ let readValues = function() {
 
   weaponLevel = parseFloat(readInput('wlvl'));
   baseWeaponDamage = parseFloat(readInput('batk'));
-  refinament = parseFloat(readInput('ref'));
+  refinament = parseFloat(readInput('ref', '0'));
   bonus = parseFloat(readInput('bonus', '0')) / 100;
   penalty = parseFloat(readInput('penalty', '100')) / 100;
   em = (parseFloat(readInput('em', '0')) / 100) + 1;

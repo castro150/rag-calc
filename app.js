@@ -27,14 +27,14 @@ let readRadioInput = function(name) {
 };
 
 let readValues = function() {
-  baseLevel = parseFloat(readInput('blvl'));
-  str = parseFloat(readInput('str'));
-  dex = parseFloat(readInput('dex'));
-  luk = parseFloat(readInput('luk'));
+  baseLevel = parseInt(readInput('blvl'));
+  str = parseInt(readInput('str'));
+  dex = parseInt(readInput('dex'));
+  luk = parseInt(readInput('luk'));
 
-  weaponLevel = parseFloat(readInput('wlvl'));
-  baseWeaponDamage = parseFloat(readInput('batk'));
-  refinament = parseFloat(readInput('ref', '0'));
+  weaponLevel = parseInt(readInput('wlvl'));
+  baseWeaponDamage = parseInt(readInput('batk'));
+  refinament = parseInt(readInput('ref', '0'));
   bonus = parseFloat(readInput('bonus', '0')) / 100;
   penalty = parseFloat(readInput('penalty', '100')) / 100;
   em = (parseFloat(readInput('em', '0')) / 100) + 1;
@@ -59,9 +59,10 @@ let calculate = function() {
 
   let statusAtk = calculateStatusAtk();
   let weaponAtk = calculateWeaponAtk();
+  let finalEquipAtk = equipAtk * em * (bonus + 1) * penalty;
 
-  let resultMinus = (statusAtk * 2) + weaponAtk.weaponAtkMinus + equipAtk + masteryAtk + buffAtk + ammunAtk;
-  let resultPlus = (statusAtk * 2) + weaponAtk.weaponAtkPlus + equipAtk + masteryAtk + buffAtk + ammunAtk;
+  let resultMinus = (statusAtk * 2) + weaponAtk.weaponAtkMinus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
+  let resultPlus = (statusAtk * 2) + weaponAtk.weaponAtkPlus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
 
   let dps = calculateAtkSec(aspd) * (resultMinus + resultPlus) / 2;
 
@@ -82,8 +83,8 @@ let calculateWeaponAtk = function() {
     refMinus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][0];
     refPlus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][1];
   }
-  let weaponAtkMinus = Math.floor((baseWeaponDamage - variance + statBonus + refMinus) * (bonus + 1) * penalty);
-  let weaponAtkPlus = Math.floor((baseWeaponDamage + variance + statBonus + refPlus) * (bonus + 1) * penalty);
+  let weaponAtkMinus = Math.floor((baseWeaponDamage * em - variance + statBonus * em + refMinus * em) * (bonus + 1) * penalty);
+  let weaponAtkPlus = Math.floor((baseWeaponDamage * em + variance + statBonus * em + refPlus * em) * (bonus + 1) * penalty);
   return {
     weaponAtkMinus,
     weaponAtkPlus

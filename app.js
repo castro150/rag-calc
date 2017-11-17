@@ -1,6 +1,5 @@
 // TODO
 // colocar skill
-// colocar efeito do EDP
 // https://forums.warpportal.com/index.php?/topic/186118-r-damage-calculation-mechanics-wip/
 
 'use strict'
@@ -48,6 +47,9 @@ let readValues = function() {
   critChance = parseFloat(readInput('crit', '0')) / 100;
   bcrit = (parseFloat(readInput('bcrit', '0')) / 100) + 1;
 
+  skillMult = (parseFloat(readInput('smult', '100')) / 100);
+  skillBonus = (parseFloat(readInput('sbonus', '0')) / 100) + 1;
+
   hdef = parseInt(readInput('hdef', '0'));
   sdef = parseInt(readInput('sdef', '0'));
 
@@ -78,9 +80,18 @@ let calculate = function() {
   critResult.minus = Math.floor(calculateWithDef(totalAtkMinus) * critDmg);
   critResult.plus = Math.floor(calculateWithDef(totalAtkPlus) * critDmg);
 
+  let skillResult = {
+    minus: '',
+    plus: ''
+  };
+  if (skillMult > 1 || skillBonus > 1) {
+    skillResult.minus = Math.floor(calculateWithDef(totalAtkMinus * skillMult * skillBonus));
+    skillResult.plus = Math.floor(calculateWithDef(totalAtkPlus * skillMult * skillBonus));
+  }
+
   let dps = calculateDps(result, critResult);
 
-  writeResult(statusAtk, weaponAtk, result, critResult, dps);
+  writeResult(statusAtk, weaponAtk, result, critResult, dps, skillResult);
 };
 
 let calculateStatusAtk = function() {
@@ -97,8 +108,10 @@ let calculateWeaponAtk = function() {
     refMinus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][0];
     refPlus = REFINAMENT_TABLE[weaponLevel - 1][refinament - 1][1];
   }
+
   let weaponAtkMinus = Math.floor((baseWeaponDamage * em - variance + statBonus * em + refMinus * em) * (bonus + 1) * penalty);
   let weaponAtkPlus = Math.floor((baseWeaponDamage * em + variance + statBonus * em + refPlus * em) * (bonus + 1) * penalty);
+
   return {
     weaponAtkMinus,
     weaponAtkPlus
@@ -128,12 +141,13 @@ let writeValue = function(id, value) {
   document.getElementById(id).innerHTML = value;
 };
 
-let writeResult = function(statusAtk, weaponAtk, result, critResult, dps) {
+let writeResult = function(statusAtk, weaponAtk, result, critResult, dps, skillResult) {
   writeValue('satk', statusAtk);
   writeValue('watak', weaponAtk.weaponAtkMinus + ' - ' + weaponAtk.weaponAtkPlus);
   writeValue('result', result.minus + ' - ' + result.plus);
   writeValue('cresult', critResult.minus + ' - ' + critResult.plus);
   writeValue('dps', dps);
+  writeValue('sresult', skillResult.minus + ' - ' + skillResult.plus);
 };
 
 let createRefinamentTable = function() {

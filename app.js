@@ -1,14 +1,13 @@
 // TODO
-// colocar ranged% (dano final)
-// colocar defesa
+// colocar skill
 // colocar efeito do EDP
 // https://forums.warpportal.com/index.php?/topic/186118-r-damage-calculation-mechanics-wip/
 
 'use strict'
 
-let baseLevel, str, dex, luk, weaponLevel, baseWeaponDamage, refinament;
+let baseLevel, str, dex, luk, rbonus, rpenalty, weaponLevel, baseWeaponDamage, refinament;
 let bonus, penalty, em, equipAtk, masteryAtk, buffAtk, ammunAtk, aspd, critChance, bcrit;
-let mainStat, otherStat;
+let skillMult, skillBonus, hdef, sdef, mainStat, otherStat;
 
 let REFINAMENT_TABLE = [];
 
@@ -30,6 +29,9 @@ let readValues = function() {
   dex = parseInt(readInput('dex'));
   luk = parseInt(readInput('luk'));
 
+  rbonus = (parseFloat(readInput('rbonus', '0')) / 100) + 1;
+  rpenalty = parseFloat(readInput('rpenality', '100')) / 100;
+
   weaponLevel = parseInt(readInput('wlvl'));
   baseWeaponDamage = parseInt(readInput('batk'));
   refinament = parseInt(readInput('ref', '0'));
@@ -46,6 +48,9 @@ let readValues = function() {
   critChance = parseFloat(readInput('crit', '0')) / 100;
   bcrit = (parseFloat(readInput('bcrit', '0')) / 100) + 1;
 
+  hdef = parseInt(readInput('hdef', '0'));
+  sdef = parseInt(readInput('sdef', '0'));
+
   mainStat = str;
   otherStat = dex;
   if (readRadioInput('wtype') === 'dex') {
@@ -61,14 +66,17 @@ let calculate = function() {
   let weaponAtk = calculateWeaponAtk();
   let finalEquipAtk = equipAtk * em * (bonus + 1) * penalty;
 
+  let totalAtkMinus = (statusAtk * 2) + weaponAtk.weaponAtkMinus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
+  let totalAtkPlus = (statusAtk * 2) + weaponAtk.weaponAtkPlus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
+
   let result = {};
-  result.minus = (statusAtk * 2) + weaponAtk.weaponAtkMinus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
-  result.plus = (statusAtk * 2) + weaponAtk.weaponAtkPlus + finalEquipAtk + masteryAtk + buffAtk + ammunAtk;
+  result.minus = Math.floor(calculateWithDef(totalAtkMinus));
+  result.plus = Math.floor(calculateWithDef(totalAtkPlus));
 
   let critResult = {};
   let critDmg = 1.4 * bcrit;
-  critResult.minus = Math.floor(result.minus * critDmg);
-  critResult.plus = Math.floor(result.plus * critDmg);
+  critResult.minus = Math.floor(calculateWithDef(totalAtkMinus) * critDmg);
+  critResult.plus = Math.floor(calculateWithDef(totalAtkPlus) * critDmg);
 
   let dps = calculateDps(result, critResult);
 
@@ -95,6 +103,15 @@ let calculateWeaponAtk = function() {
     weaponAtkMinus,
     weaponAtkPlus
   };
+};
+
+let calculateWithDef = function(atk) {
+  let hardDefMult = calculateHardDefMult();
+  return atk * rbonus * rpenalty * hardDefMult - sdef;
+};
+
+let calculateHardDefMult = function() {
+  return (4000 + hdef) / (4000 + hdef * 10);
 };
 
 let calculateDps = function(atk, critAtk) {

@@ -22,19 +22,22 @@ let readRadioInput = function(name) {
 };
 
 let readValues = function() {
+  var pread;
   baseLevel = parseInt(readInput('blvl'));
   str = parseInt(readInput('str'));
   dex = parseInt(readInput('dex'));
   luk = parseInt(readInput('luk'));
 
   rbonus = (parseFloat(readInput('rbonus', '0')) / 100) + 1;
-  rpenalty = parseFloat(readInput('rpenality', '100')) / 100;
+  pread = parseFloat(readInput('rpenality', '100'));
+  rpenalty = pread === 0 ? 1 : pread / 100;
 
   weaponLevel = parseInt(readInput('wlvl'));
   baseWeaponDamage = parseInt(readInput('batk'));
   refinament = parseInt(readInput('ref', '0'));
   bonus = parseFloat(readInput('bonus', '0')) / 100;
-  penalty = parseFloat(readInput('penalty', '100')) / 100;
+  pread = parseFloat(readInput('penalty', '100'));
+  penalty = pread === 0 ? 1 : pread / 100;
   em = (parseFloat(readInput('em', '0')) / 100) + 1;
 
   equipAtk = parseFloat(readInput('equip', '0'));
